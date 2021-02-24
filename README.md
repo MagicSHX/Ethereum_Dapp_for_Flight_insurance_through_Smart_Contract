@@ -1,4 +1,4 @@
-# FlightSurety
+# Ethereum_Dapp_for_Flight_insurance_through_Smart_Contract
 
 FlightSurety is a sample application project for Udacity's Blockchain course.
 
