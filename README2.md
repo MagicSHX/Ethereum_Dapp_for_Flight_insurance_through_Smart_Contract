@@ -3,4 +3,4 @@
     "webpack": "^4.6.0",
     "webpack-cli": "^3.1.2",
     pending: 
-    - check "authorizeCaller"
+    - TypeError: Cannot read property 'setTestingMode' of undefined

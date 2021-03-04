@@ -32,6 +32,7 @@ contract('Flight Surety Tests', async (accounts) => {
           await config.flightSuretyData.setOperatingStatus(false, { from: config.testAddresses[2] });
       }
       catch(e) {
+          //console.log(e);
           accessDenied = true;
       }
       assert.equal(accessDenied, true, "Access not restricted to Contract Owner");
@@ -49,6 +50,7 @@ contract('Flight Surety Tests', async (accounts) => {
       catch(e) {
           accessDenied = true;
       }
+      //HX_20210304: error is wrong, should be "Contract Owner can't access setOperatingStatus()"
       assert.equal(accessDenied, false, "Access not restricted to Contract Owner");
       
   });
@@ -63,6 +65,7 @@ contract('Flight Surety Tests', async (accounts) => {
           await config.flightSurety.setTestingMode(true);
       }
       catch(e) {
+          console.log(e);
           reverted = true;
       }
       assert.equal(reverted, true, "Access not blocked for requireIsOperational");      
