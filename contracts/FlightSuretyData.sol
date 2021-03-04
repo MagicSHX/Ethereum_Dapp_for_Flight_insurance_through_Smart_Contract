@@ -12,6 +12,16 @@ contract FlightSuretyData {
     address private contractOwner;                                      // Account used to deploy contract
     bool private operational = true;                                    // Blocks all state changes throughout the contract if false
 
+    struct Airline {
+        bool isRegistered;
+        //uint8 statusCode;
+        uint256 updatedTimestamp;
+        //address airline;
+    }
+    mapping(address => Airline) private airlines;
+
+
+
     /********************************************************************************************/
     /*                                       EVENT DEFINITIONS                                  */
     /********************************************************************************************/
@@ -176,6 +186,10 @@ contract FlightSuretyData {
         return keccak256(abi.encodePacked(airline, flight, timestamp));
     }
 
+    function isAirline(address airline)public view returns (bool)
+    {
+        return airlines[airline].isRegistered;
+    }
 
     function func_with_requireIsOperational
                             (                             

@@ -51,8 +51,8 @@ contract('Flight Surety Tests', async (accounts) => {
           accessDenied = true;
       }
       //HX_20210304: error is wrong, should be "Contract Owner can't access setOperatingStatus()"
-      assert.equal(accessDenied, false, "Access not restricted to Contract Owner");
-      
+      //assert.equal(accessDenied, false, "Access not restricted to Contract Owner");
+      assert.equal(accessDenied, false, "Contract Owner can't access setOperatingStatus()");
   });
 
   it(`(multiparty) can block access to functions using requireIsOperational when operating status is false`, async function () {
