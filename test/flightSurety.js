@@ -62,7 +62,8 @@ contract('Flight Surety Tests', async (accounts) => {
       let reverted = false;
       try 
       {
-          await config.flightSurety.setTestingMode(true);
+          //await config.flightSurety.setTestingMode(true);
+          await config.flightSuretyData.func_with_requireIsOperational();
       }
       catch(e) {
           console.log(e);

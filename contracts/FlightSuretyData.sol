@@ -102,6 +102,7 @@ contract FlightSuretyData {
                             (   
                             )
                             external
+                            
                             pure
     {
     }
@@ -115,6 +116,7 @@ contract FlightSuretyData {
                             (                             
                             )
                             external
+                            requireIsOperational
                             payable
     {
 
@@ -127,6 +129,7 @@ contract FlightSuretyData {
                                 (
                                 )
                                 external
+                                
                                 pure
     {
     }
@@ -140,6 +143,7 @@ contract FlightSuretyData {
                             (
                             )
                             external
+                            
                             pure
     {
     }
@@ -153,6 +157,7 @@ contract FlightSuretyData {
                             (   
                             )
                             public
+                            requireIsOperational
                             payable
     {
     }
@@ -165,10 +170,24 @@ contract FlightSuretyData {
                         )
                         pure
                         internal
+                        
                         returns(bytes32) 
     {
         return keccak256(abi.encodePacked(airline, flight, timestamp));
     }
+
+
+    function func_with_requireIsOperational
+                            (                             
+                            )
+                            external
+                            requireIsOperational
+                            payable
+    {
+
+    }
+
+
 
     /**
     * @dev Fallback function for funding smart contract.
