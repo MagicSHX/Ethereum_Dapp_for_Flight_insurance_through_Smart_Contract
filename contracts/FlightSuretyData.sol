@@ -19,6 +19,7 @@ contract FlightSuretyData {
         //address airline;
     }
     mapping(address => Airline) private airlines;
+    //airlines[airline].isRegistered = True;
 
 
 
@@ -33,6 +34,7 @@ contract FlightSuretyData {
     */
     constructor
                                 (
+                                    //bytes32 firstAirline
                                 ) 
                                 public 
     {
