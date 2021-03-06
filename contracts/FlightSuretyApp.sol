@@ -35,6 +35,8 @@ contract FlightSuretyApp {
     }
     mapping(bytes32 => Flight) private flights;
 
+    bool success;
+    uint256 votes;
 
     /********************************************************************************************/
     /*                                       FUNCTION MODIFIERS                                 */
@@ -74,12 +76,15 @@ contract FlightSuretyApp {
     */
     constructor
                                 (
-                                    //address dataContract
+                                    address dataContract,
+                                    address first_Airline_address
                                 ) 
                                 public 
     {
         contractOwner = msg.sender;
-        //flightSuretyData = FlightSuretyData(dataContract);
+        flightSuretyData = FlightSuretyData(dataContract);
+        //votes = RegisterAirline(first_Airline_address);
+        flightSuretyData.registerAirline(first_Airline_address, msg.sender);
     }
 
     /********************************************************************************************/
@@ -99,19 +104,7 @@ contract FlightSuretyApp {
     /********************************************************************************************/
 
   
-   /**
-    * @dev Add an airline to the registration queue
-    * needs to be removed from here.
-    */   
-    function registerAirline
-                            (   
-                            )
-                            external
-                            pure
-                            returns(bool success, uint256 votes)
-    {
-        return (success, 0);
-    }
+
 
 
    /**
@@ -210,6 +203,8 @@ contract FlightSuretyApp {
     event OracleRequest(uint8 index, address airline, string flight, uint256 timestamp);
 
 
+    //event RegisterAirline(address airline);
+    
     // Register an oracle with the contract
     function registerOracle
                             (
@@ -335,11 +330,18 @@ contract FlightSuretyApp {
         return random;
     }
 
+    function RegisterAirline(address airline) external {
+        flightSuretyData.registerAirline(airline, msg.sender);
+    }
+
+
+
+
 // endregion
 
 }   
 
 contract FlightSuretyData {
-    function registerAirline()
-    external;
+    function registerAirline(address airline, address owner) external {}
+    //external;
 }

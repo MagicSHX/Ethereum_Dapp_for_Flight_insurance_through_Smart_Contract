@@ -14,13 +14,14 @@ contract FlightSuretyData {
 
     struct Airline {
         bool isRegistered;
-        //uint8 statusCode;
-        uint256 updatedTimestamp;
-        //address airline;
+        uint8 votes;
+        address airline;
+        //uint256 updatedTimestamp;
+        
     }
     mapping(address => Airline) private airlines;
     //airlines[airline].isRegistered = True;
-
+    bytes32 firstAirline;
 
 
     /********************************************************************************************/
@@ -34,7 +35,7 @@ contract FlightSuretyData {
     */
     constructor
                                 (
-                                    //bytes32 firstAirline
+                                    //bytes32 _firstAirline
                                 ) 
                                 public 
     {
@@ -112,11 +113,21 @@ contract FlightSuretyData {
     */   
     function registerAirline
                             (   
+                                address airline_address,
+                                address owner
                             )
                             external
                             
-                            pure
+                            
+                            returns(bool success, uint256 votes)
     {
+        airlines[airline_address] = Airline({
+            isRegistered: true,
+            votes: 0,
+            //updatedTimestamp,
+            airline: airline_address
+        });
+        return (success, 0);
     }
 
 
