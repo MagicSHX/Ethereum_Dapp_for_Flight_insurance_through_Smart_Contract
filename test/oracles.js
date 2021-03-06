@@ -16,7 +16,7 @@ contract('Oracles', async (accounts) => {
     const STATUS_CODE_LATE_WEATHER = 30;
     const STATUS_CODE_LATE_TECHNICAL = 40;
     const STATUS_CODE_LATE_OTHER = 50;
-
+    console.log(STATUS_CODE_ON_TIME);
   });
 
 
@@ -49,20 +49,24 @@ contract('Oracles', async (accounts) => {
     // loop through all the accounts and for each account, all its Indexes (indices?)
     // and submit a response. The contract will reject a submission if it was
     // not requested so while sub-optimal, it's a good test of that feature
-    for(let a=1; a<TEST_ORACLES_COUNT; a++) {
+    for(let a = 1; a < TEST_ORACLES_COUNT; a++) {
 
       // Get oracle information
       let oracleIndexes = await config.flightSuretyApp.getMyIndexes.call({ from: accounts[a]});
-      for(let idx=0;idx<3;idx++) {
+      for(let idx = 0; idx < 3; idx++) {
 
         try {
           // Submit a response...it will only be accepted if there is an Index match
-          await config.flightSuretyApp.submitOracleResponse(oracleIndexes[idx], config.firstAirline, flight, timestamp, STATUS_CODE_ON_TIME, { from: accounts[a] });
-
+          
+          //await config.flightSuretyApp.submitOracleResponse(oracleIndexes[idx], config.firstAirline, flight, timestamp, STATUS_CODE_ON_TIME, { from: accounts[a] });
+          await config.flightSuretyApp.submitOracleResponse(oracleIndexes[idx], config.firstAirline, flight, timestamp, 10, { from: accounts[a] });
+          
+          console.log(a, idx);
         }
         catch(e) {
           // Enable this when debugging
-           console.log('\nError', idx, oracleIndexes[idx].toNumber(), flight, timestamp);
+          //console.log(e);
+          //console.log('\nError', a, idx, oracleIndexes[idx].toNumber(), flight, timestamp);
         }
 
       }
