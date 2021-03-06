@@ -330,7 +330,7 @@ contract FlightSuretyApp {
         return random;
     }
 
-    function RegisterAirline(address airline) external {
+    function registerAirline(address airline) external {
         flightSuretyData.registerAirline(airline, msg.sender);
     }
 

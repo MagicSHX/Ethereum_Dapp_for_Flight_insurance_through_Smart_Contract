@@ -66,7 +66,7 @@ contract('Flight Surety Tests', async (accounts) => {
           await config.flightSuretyData.func_with_requireIsOperational();
       }
       catch(e) {
-          console.log(e);
+          //console.log(e);
           reverted = true;
       }
       assert.equal(reverted, true, "Access not blocked for requireIsOperational");      
@@ -86,7 +86,7 @@ contract('Flight Surety Tests', async (accounts) => {
         await config.flightSuretyApp.registerAirline(newAirline, {from: config.firstAirline});
     }
     catch(e) {
-
+        console.log(e);
     }
     let result = await config.flightSuretyData.isAirline.call(newAirline); 
     console.log("account 1 is Airline? : ", await config.flightSuretyData.isAirline.call(accounts[1]));

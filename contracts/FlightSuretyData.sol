@@ -11,6 +11,8 @@ contract FlightSuretyData {
 
     address private contractOwner;                                      // Account used to deploy contract
     bool private operational = true;                                    // Blocks all state changes throughout the contract if false
+    uint8 volume_registered_airlines = 0;
+
 
     struct Airline {
         bool isRegistered;
@@ -20,6 +22,19 @@ contract FlightSuretyData {
         
     }
     mapping(address => Airline) private airlines;
+
+    struct Registered_Airline {
+        //bool isRegistered;
+        //uint8 votes;
+        address airline;
+        //uint256 updatedTimestamp;
+    }
+    mapping(address => Registered_Airline) private registered_airlines;
+
+
+
+
+
     //airlines[airline].isRegistered = True;
     bytes32 firstAirline;
 
@@ -106,6 +121,17 @@ contract FlightSuretyData {
     /*                                     SMART CONTRACT FUNCTIONS                             */
     /********************************************************************************************/
 
+
+
+
+
+
+
+
+
+
+
+
    /**
     * @dev Add an airline to the registration queue
     *      Can only be called from FlightSuretyApp contract
@@ -121,13 +147,36 @@ contract FlightSuretyData {
                             
                             returns(bool success, uint256 votes)
     {
-        airlines[airline_address] = Airline({
-            isRegistered: true,
-            votes: 0,
-            //updatedTimestamp,
-            airline: airline_address
-        });
-        return (success, 0);
+
+
+
+        if(volume_registered_airlines <= 3)
+            {
+                airlines[airline_address] = Airline({
+                    isRegistered: true,
+                    votes: 0,
+                    //updatedTimestamp,
+                    airline: airline_address
+                });
+
+                //registered_airlines[airline_address] = Registered_Airline({
+                    //isRegistered: true,
+                    //votes: 0,
+                    //updatedTimestamp,
+                    //airline: airline_address
+                //});
+                volume_registered_airlines += 1;
+                return (success, 0);
+            }
+        else
+            {
+                
+            }
+
+
+
+
+
     }
 
 
