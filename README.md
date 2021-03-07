@@ -10,7 +10,8 @@ To install, download or clone the repo, then:
 
 `npm install`
 `ganache-cli -l 9999999999999 -g 1 -a 50 -e 10000`
-`truffle develop`
+`truffle develop` - not utilized here as using ganache for the project
+`truffle migrate --reset`
 `truffle compile`
 
 ## Develop Client

@@ -4,8 +4,13 @@ var mnemonic = "juice wide toy unlock draw infant manage kind harbor crew slogan
 
 module.exports = {
   networks: {
-    
     development: {
+      host: "127.0.0.1",
+      port: 8545,
+      network_id: "*",
+      gas: 6721975
+    },
+    development_old: {
       networkCheckTimeout: 10000,
       provider: function() {
         return new HDWalletProvider(mnemonic, "http://127.0.0.1:8545/", 0, 50);

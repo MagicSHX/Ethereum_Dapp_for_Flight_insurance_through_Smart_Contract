@@ -96,4 +96,30 @@ contract('Flight Surety Tests', async (accounts) => {
   });
  
 
+
+  it('It can register a flight using registerAirline() with a registered Airline', async () => {
+    
+    // ARRANGE
+    let first_Flight_name = "SGFL001";
+    let first_Airline_address = config.firstAirline;
+    // ACT
+    try {
+        await config.flightSuretyApp.registerFlight(
+            first_Flight_name, 
+            Math.floor(Date.now() / 1000),
+            first_Airline_address,
+            {from: config.firstAirline}
+        );
+    }
+    catch(e) {
+        console.log(e);
+    }
+    let result = await config.flightSuretyApp.FlightIsRegistered.call(first_Flight_name, first_Airline_address); 
+    //console.log("account 1 is Airline? : ", await config.flightSuretyData.isAirline.call(accounts[1]));
+    // ASSERT
+    assert.equal(result, true, "Register flight function is not working");
+
+  });
+
+
 });

@@ -110,13 +110,37 @@ contract FlightSuretyApp {
     */  
     function registerFlight
                                 (
+                                    string flight_name,
+                                    uint256 timestamp,
+                                    address airline_address
                                 )
                                 external
-                                pure
+                                
     {
-
+        //pend: check name duplication
+        flights[stringToBytes32(flight_name)] = Flight({
+            isRegistered: true,
+            statusCode: STATUS_CODE_UNKNOWN,
+            updatedTimestamp: timestamp,
+            airline: airline_address
+        });
     }
     
+    function FlightIsRegistered
+                                (
+                                    string flight_name,
+                                    address airline_address
+                                )
+                                external
+                                returns (bool)
+    {
+        require(flights[stringToBytes32(flight_name)].isRegistered, "No Registered flight found!");
+        return flights[stringToBytes32(flight_name)].isRegistered;
+    }
+    
+
+
+
    /**
     * @dev Called after oracle has updated flight status
     *
@@ -129,10 +153,19 @@ contract FlightSuretyApp {
                                     uint8 statusCode
                                 )
                                 internal
-                                pure
+                                //pure
     {
+        //require(false, statusCode);
+        //flight = bytes32(flight);
+        flights[stringToBytes32(flight)].statusCode = statusCode;
+        flights[stringToBytes32(flight)].updatedTimestamp = timestamp;
     }
 
+    function stringToBytes32(string memory source) returns (bytes32 result) {
+        assembly {
+            result := mload(add(source, 32))
+        }
+    }
 
     // Generate a request for oracles to fetch flight information
     function fetchFlightStatus
@@ -252,7 +285,7 @@ contract FlightSuretyApp {
         require((oracles[msg.sender].indexes[0] == index) || (oracles[msg.sender].indexes[1] == index) || (oracles[msg.sender].indexes[2] == index), "Index does not match oracle request");
 
 
-        bytes32 key = keccak256(abi.encodePacked(index, airline, flight, timestamp)); 
+        bytes32 key = keccak256(abi.encodePacked(index, airline, flight, timestamp));
         require(oracleResponses[key].isOpen, "Flight or timestamp do not match oracle request");
 
         oracleResponses[key].responses[statusCode].push(msg.sender);
