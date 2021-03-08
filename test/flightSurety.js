@@ -101,12 +101,14 @@ contract('Flight Surety Tests', async (accounts) => {
     
     // ARRANGE
     let first_Flight_name = "SGFL001";
+    let first_Flight_timestamp = 12345678;
+    //Math.floor(Date.now() / 1000)
     let first_Airline_address = config.firstAirline;
     // ACT
     try {
         await config.flightSuretyApp.registerFlight(
             first_Flight_name, 
-            Math.floor(Date.now() / 1000),
+            first_Flight_timestamp,
             first_Airline_address,
             {from: config.firstAirline}
         );
@@ -114,12 +116,40 @@ contract('Flight Surety Tests', async (accounts) => {
     catch(e) {
         console.log(e);
     }
-    let result = await config.flightSuretyApp.FlightIsRegistered.call(first_Flight_name, first_Airline_address); 
+    let result = await config.flightSuretyApp.FlightIsRegistered.call(first_Airline_address, first_Flight_name, first_Flight_timestamp); 
     //console.log("account 1 is Airline? : ", await config.flightSuretyData.isAirline.call(accounts[1]));
     // ASSERT
     assert.equal(result, true, "Register flight function is not working");
 
   });
+
+
+  it('Passenger is allowed to by insurance for a registered flight', async () => {
+    
+    // ARRANGE
+    let first_Flight_name = "SGFL001";
+    let first_Flight_timestamp = 12345678;
+    //Math.floor(Date.now() / 1000)
+    let first_Airline_address = config.firstAirline;
+    // ACT
+    try {
+
+        
+    }
+    catch(e) {
+        console.log(e);
+    }
+    //let result = await config.flightSuretyApp.FlightIsRegistered.call(first_Airline_address, first_Flight_name, first_Flight_timestamp); 
+    //console.log("account 1 is Airline? : ", await config.flightSuretyData.isAirline.call(accounts[1]));
+    // ASSERT
+    //assert.equal(result, true, "Register flight function is not working");
+
+
+
+
+
+  });
+
 
 
 });

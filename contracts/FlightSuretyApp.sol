@@ -110,35 +110,52 @@ contract FlightSuretyApp {
     */  
     function registerFlight
                                 (
-                                    string flight_name,
+                                    string flight,
                                     uint256 timestamp,
-                                    address airline_address
+                                    address airline
                                 )
                                 external
                                 
     {
         //pend: check name duplication
-        flights[stringToBytes32(flight_name)] = Flight({
+        bytes32 flight_key = getFlightKey(airline, flight, timestamp);
+        flights[flight_key] = Flight({
             isRegistered: true,
             statusCode: STATUS_CODE_UNKNOWN,
+            //STATUS_CODE_UNKNOWN
+            //pending: needs current timestamp instead
             updatedTimestamp: timestamp,
-            airline: airline_address
+            airline: airline
         });
     }
     
     function FlightIsRegistered
                                 (
-                                    string flight_name,
-                                    address airline_address
+                                    address airline,
+                                    string flight,
+                                    uint256 timestamp
                                 )
                                 external
                                 returns (bool)
     {
-        require(flights[stringToBytes32(flight_name)].isRegistered, "No Registered flight found!");
-        return flights[stringToBytes32(flight_name)].isRegistered;
+        bytes32 flight_key = getFlightKey(airline, flight, timestamp);
+        require(flights[flight_key].isRegistered, "No Registered flight found!");
+        return flights[flight_key].isRegistered;
     }
     
-
+    function FlightStatusCode
+                                (
+                                    address airline,
+                                    string flight,
+                                    uint256 timestamp
+                                )
+                                external
+                                returns (uint8)
+    {
+        bytes32 flight_key = getFlightKey(airline, flight, timestamp);
+        require(flights[flight_key].isRegistered, "No Registered flight found!");
+        return flights[flight_key].statusCode;
+    }
 
 
    /**
@@ -157,8 +174,12 @@ contract FlightSuretyApp {
     {
         //require(false, statusCode);
         //flight = bytes32(flight);
-        flights[stringToBytes32(flight)].statusCode = statusCode;
-        flights[stringToBytes32(flight)].updatedTimestamp = timestamp;
+
+        bytes32 flight_key = getFlightKey(airline, flight, timestamp);
+
+        flights[flight_key].statusCode = statusCode;
+        //should be current timestamp
+        flights[flight_key].updatedTimestamp = timestamp;
     }
 
     function stringToBytes32(string memory source) returns (bytes32 result) {
