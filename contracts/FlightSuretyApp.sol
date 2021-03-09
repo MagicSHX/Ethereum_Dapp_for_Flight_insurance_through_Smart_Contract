@@ -179,7 +179,7 @@ contract FlightSuretyApp {
 
         flights[flight_key].statusCode = statusCode;
         //should be current timestamp
-        flights[flight_key].updatedTimestamp = timestamp;
+        //flights[flight_key].updatedTimestamp = timestamp;
     }
 
     function stringToBytes32(string memory source) returns (bytes32 result) {
@@ -317,7 +317,7 @@ contract FlightSuretyApp {
         if (oracleResponses[key].responses[statusCode].length >= MIN_RESPONSES) {
 
             emit FlightStatusInfo(airline, flight, timestamp, statusCode);
-
+            oracleResponses[key].isOpen = false;
             // Handle flight status as appropriate
             processFlightStatus(airline, flight, timestamp, statusCode);
         }

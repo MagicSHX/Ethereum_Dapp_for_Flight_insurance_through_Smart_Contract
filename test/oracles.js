@@ -14,6 +14,8 @@ contract('Oracles', async (accounts) => {
   const STATUS_CODE_LATE_OTHER = 50;
   //console.log(STATUS_CODE_ON_TIME);
 
+  var STATUS_CODE_LIST = [STATUS_CODE_UNKNOWN, STATUS_CODE_ON_TIME, STATUS_CODE_LATE_AIRLINE, STATUS_CODE_LATE_WEATHER, STATUS_CODE_LATE_TECHNICAL, STATUS_CODE_LATE_OTHER];
+
   var config;
   before('setup contract', async () => {
     config = await Test.Config(accounts);
@@ -43,6 +45,10 @@ contract('Oracles', async (accounts) => {
     let flight = 'ND1309'; // Course number
     let timestamp = Math.floor(Date.now() / 1000);
     let first_Airline_address = accounts[1];
+    let random_number = Math.floor(Math.random() * 6);
+
+    console.log(STATUS_CODE_LIST[random_number]);
+
     await config.flightSuretyApp.registerFlight(
       flight, 
       timestamp,
@@ -68,8 +74,9 @@ contract('Oracles', async (accounts) => {
           // Submit a response...it will only be accepted if there is an Index match
           
           //await config.flightSuretyApp.submitOracleResponse(oracleIndexes[idx], config.firstAirline, flight, timestamp, STATUS_CODE_ON_TIME, { from: accounts[a] });
-          await config.flightSuretyApp.submitOracleResponse(oracleIndexes[idx], config.firstAirline, flight, timestamp, STATUS_CODE_ON_TIME, { from: accounts[a] });
+          await config.flightSuretyApp.submitOracleResponse(oracleIndexes[idx], config.firstAirline, flight, timestamp, STATUS_CODE_LIST[random_number], { from: accounts[a] });
           
+
           console.log(a, idx);
         }
         catch(e) {
