@@ -16,17 +16,20 @@ contract FlightSuretyData {
 
     struct Airline {
         bool isRegistered;
+        bool isAgreed;
+        bool isPaid;
+        bool isContracted;
         uint8 votes;
-        address airline;
+        //address airline;
         //uint256 updatedTimestamp;
         
     }
     mapping(address => Airline) private airlines;
 
     struct Registered_Airline {
-        //bool isRegistered;
+        bool isRegistered;
         //uint8 votes;
-        address airline;
+        //address airline;
         //uint256 updatedTimestamp;
     }
     mapping(address => Registered_Airline) private registered_airlines;
@@ -123,10 +126,42 @@ contract FlightSuretyData {
 
 
 
+    function Airline_funding_check
+                            (
+                                
+                            )
+                            public 
+                            view 
+                            returns(bool) 
+    {
+        if (msg.value >= 10 ether)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 
-
-
+    function Airline_iscontracted_check
+                            (
+                                address airline_address
+                            )
+                            public 
+                            view 
+                            returns(bool) 
+    {
+        if (airlines[airline_address].isRegistered == true && airlines[airline_address].isAgreed == true && airlines[airline_address].isPaid == true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 
 
@@ -148,32 +183,51 @@ contract FlightSuretyData {
                             returns(bool success, uint256 votes)
     {
 
-
-
-        if(volume_registered_airlines <= 3)
+        if(volume_registered_airlines == 0)
             {
+                //require(msg.sender == contractOwner, "Caller is not contract owner");
                 airlines[airline_address] = Airline({
                     isRegistered: true,
-                    votes: 0,
-                    //updatedTimestamp,
-                    airline: airline_address
+                    isAgreed: true,
+                    isPaid: Airline_funding_check(),
+                    isContracted: Airline_iscontracted_check(airline_address),
+                    votes: 0
                 });
+                volume_registered_airlines++;
+            }
 
+        else if(volume_registered_airlines <= 3)
+            {
+                require(airlines[msg.sender].isContracted, "Only existing airline may register a new airline until there are at least four airlines registered.");
+
+                airlines[airline_address] = Airline({
+                    isRegistered: true,
+                    isAgreed: true,
+                    isPaid: Airline_funding_check(),
+                    isContracted: Airline_iscontracted_check(airline_address),
+                    votes: 0
+                });
                 //registered_airlines[airline_address] = Registered_Airline({
                     //isRegistered: true,
                     //votes: 0,
                     //updatedTimestamp,
                     //airline: airline_address
                 //});
-                volume_registered_airlines += 1;
-                return (success, 0);
+                volume_registered_airlines++;
+                
             }
         else
             {
-                
+                airlines[airline_address] = Airline({
+                    isRegistered: false,
+                    isAgreed: false,
+                    isPaid: Airline_funding_check(),
+                    isContracted: Airline_iscontracted_check(airline_address),
+                    votes: 0
+                });
+                volume_registered_airlines++;
             }
-
-
+        return (success, 0);
 
 
 
@@ -232,6 +286,10 @@ contract FlightSuretyData {
                             requireIsOperational
                             payable
     {
+        require(airlines[msg.sender].isRegistered, "Airline is not registered.");
+        airlines[msg.sender].isPaid = Airline_funding_check();
+        airlines[msg.sender].isPaid = true;
+        airlines[msg.sender].isContracted = Airline_iscontracted_check(msg.sender);
     }
 
     function getFlightKey

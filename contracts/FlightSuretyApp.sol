@@ -385,7 +385,9 @@ contract FlightSuretyApp {
         flightSuretyData.registerAirline(airline, msg.sender);
     }
 
-
+    function fund() external {
+        flightSuretyData.fund();
+    }
 
 
 // endregion
@@ -394,5 +396,6 @@ contract FlightSuretyApp {
 
 contract FlightSuretyData {
     function registerAirline(address airline, address owner) external {}
+    function fund() external {}
     //external;
 }

@@ -95,9 +95,27 @@ contract('Flight Surety Tests', async (accounts) => {
 
   });
  
+  it('(airline) can register an Airline using registerAirline() if it is funded', async () => {
+    
+    // ARRANGE
+    let newAirline = accounts[2];
+    let ExpectedFundPrice = web3.utils.toWei("10", "ether");
+    // ACT
+    try {
+        await config.flightSuretyData.fund({from: config.firstAirline, value: ExpectedFundPrice});
+        await config.flightSuretyApp.registerAirline(newAirline, {from: config.firstAirline});
+    }
+    catch(e) {
+        console.log(e);
+    }
+    let result = await config.flightSuretyData.isAirline.call(newAirline); 
+    console.log("account 1 is Airline? : ", await config.flightSuretyData.isAirline.call(accounts[1]));
+    // ASSERT
+    assert.equal(result, true, "Airline should be able to register another airline if it has provided funding");
 
+  });
 
-  it('It can register a flight using registerAirline() with a registered Airline', async () => {
+  it('It can register a flight using registerAirline()', async () => {
     
     // ARRANGE
     let first_Flight_name = "SGFL001";
