@@ -165,7 +165,28 @@ contract FlightSuretyData {
     }
 
 
+    function Airline_vote
+                            (
+                                address airline_address,
+                                address msg_sender
+                            )
+                            //public 
+                            view
+                            external
+                            //returns(bool) 
+    {
+        require(airlines[airline_address].isAgreed == false , "Voted Airlined has been agreed to be registrated.");
+        require(airlines[msg_sender].isRegistered == true , "Voter needs to be a registered Airline.");
+        airlines[airline_address].votes++;
+        if (airlines[airline_address].votes >= volume_registered_airlines / 2)
+        {
+            airlines[airline_address].isAgreed = true;
+            airlines[airline_address].isRegistered = true;
+            airlines[airline_address].isContracted = Airline_iscontracted_check(airline_address);
+            volume_registered_airlines++;
+        }
 
+    }
 
 
    /**
@@ -230,7 +251,7 @@ contract FlightSuretyData {
                     isContracted: Airline_iscontracted_check(airline_address),
                     votes: 0
                 });
-                volume_registered_airlines++;
+                //volume_registered_airlines++;
             }
         return (success, 0);
 

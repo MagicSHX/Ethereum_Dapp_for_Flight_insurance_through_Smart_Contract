@@ -389,6 +389,9 @@ contract FlightSuretyApp {
         flightSuretyData.fund(msg.sender, msg.value);
     }
 
+    function Airline_vote(address airline_address) external {
+        flightSuretyData.Airline_vote(airline_address, msg.sender);
+    }
 
 // endregion
 
@@ -397,5 +400,7 @@ contract FlightSuretyApp {
 contract FlightSuretyData {
     function registerAirline(address airline, address msg_sender, uint msg_value) external {}
     function fund(address msg_sender, uint msg_value) external {}
+    function Airline_vote(address airline_address, address msg_sender) external {}
     //external;
 }
+

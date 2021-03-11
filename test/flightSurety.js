@@ -115,7 +115,39 @@ contract('Flight Surety Tests', async (accounts) => {
 
   });
 
-  it('It can register a flight using registerAirline()', async () => {
+  it('(airline) can register an Airline with at least 50% voted from registrated Airline', async () => {
+    
+    // ARRANGE
+    
+    let newAirline_3 = accounts[3];
+    let newAirline_4 = accounts[4];
+    let newAirline_5 = accounts[5];
+    let ExpectedFundPrice = web3.utils.toWei("10", "ether");
+    // ACT
+    try {
+        await config.flightSuretyApp.fund({from: config.firstAirline, value: ExpectedFundPrice});
+        await config.flightSuretyApp.registerAirline(newAirline_3, {from: config.firstAirline});
+        await config.flightSuretyApp.registerAirline(newAirline_4, {from: config.firstAirline});
+        await config.flightSuretyApp.registerAirline(newAirline_5, {from: config.firstAirline});
+        await config.flightSuretyApp.fund({from: newAirline_3, value: ExpectedFundPrice});
+        await config.flightSuretyApp.fund({from: newAirline_4, value: ExpectedFundPrice});
+        await config.flightSuretyApp.fund({from: newAirline_5, value: ExpectedFundPrice});
+        await config.flightSuretyApp.Airline_vote(newAirline_5, {from: config.firstAirline});
+        await config.flightSuretyApp.Airline_vote(newAirline_5, {from: newAirline_3});
+        
+    }
+    catch(e) {
+        console.log(e);
+    }
+    let result = await config.flightSuretyData.isAirline.call(newAirline_5); 
+    //console.log("account 1 is Airline? : ", await config.flightSuretyData.isAirline.call(accounts[1]));
+    // ASSERT
+    assert.equal(result, true, "Existitng Airlines should be able to register another airline with 50% votes or above");
+
+  });
+
+
+  it('It can register a flight using registerFlight()', async () => {
     
     // ARRANGE
     let first_Flight_name = "SGFL001";
