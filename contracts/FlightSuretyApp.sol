@@ -81,7 +81,7 @@ contract FlightSuretyApp {
         contractOwner = msg.sender;
         flightSuretyData = FlightSuretyData(dataContract);
         //votes = RegisterAirline(first_Airline_address);
-        flightSuretyData.registerAirline(first_Airline_address, msg.sender);
+        flightSuretyData.registerAirline(first_Airline_address, msg.sender, msg.value);
     }
 
     /********************************************************************************************/
@@ -382,11 +382,11 @@ contract FlightSuretyApp {
     }
 
     function registerAirline(address airline) external {
-        flightSuretyData.registerAirline(airline, msg.sender);
+        flightSuretyData.registerAirline(airline, msg.sender, msg.value);
     }
 
-    function fund() external {
-        flightSuretyData.fund();
+    function fund() external payable {
+        flightSuretyData.fund(msg.sender, msg.value);
     }
 
 
@@ -395,7 +395,7 @@ contract FlightSuretyApp {
 }   
 
 contract FlightSuretyData {
-    function registerAirline(address airline, address owner) external {}
-    function fund() external {}
+    function registerAirline(address airline, address msg_sender, uint msg_value) external {}
+    function fund(address msg_sender, uint msg_value) external {}
     //external;
 }

@@ -128,13 +128,14 @@ contract FlightSuretyData {
 
     function Airline_funding_check
                             (
-                                
+                                //address msg_sender,
+                                uint msg_value
                             )
                             public 
                             view 
                             returns(bool) 
     {
-        if (msg.value >= 10 ether)
+        if (msg_value >= 10 ether)
         {
             return true;
         }
@@ -175,7 +176,8 @@ contract FlightSuretyData {
     function registerAirline
                             (   
                                 address airline_address,
-                                address owner
+                                address msg_sender,
+                                uint msg_value
                             )
                             external
                             
@@ -189,8 +191,10 @@ contract FlightSuretyData {
                 airlines[airline_address] = Airline({
                     isRegistered: true,
                     isAgreed: true,
-                    isPaid: Airline_funding_check(),
+                    isPaid: Airline_funding_check(msg_value),
+                    //isPaid: true,
                     isContracted: Airline_iscontracted_check(airline_address),
+                    //isContracted: true,
                     votes: 0
                 });
                 volume_registered_airlines++;
@@ -198,12 +202,13 @@ contract FlightSuretyData {
 
         else if(volume_registered_airlines <= 3)
             {
-                require(airlines[msg.sender].isContracted, "Only existing airline may register a new airline until there are at least four airlines registered.");
+                require(airlines[msg_sender].isContracted, "Only existing airline may register a new airline until there are at least four airlines registered.");
 
                 airlines[airline_address] = Airline({
                     isRegistered: true,
                     isAgreed: true,
-                    isPaid: Airline_funding_check(),
+                    isPaid: Airline_funding_check(msg_value),
+                    //isPaid: true,
                     isContracted: Airline_iscontracted_check(airline_address),
                     votes: 0
                 });
@@ -221,7 +226,7 @@ contract FlightSuretyData {
                 airlines[airline_address] = Airline({
                     isRegistered: false,
                     isAgreed: false,
-                    isPaid: Airline_funding_check(),
+                    isPaid: Airline_funding_check(msg_value),
                     isContracted: Airline_iscontracted_check(airline_address),
                     votes: 0
                 });
@@ -280,16 +285,18 @@ contract FlightSuretyData {
     *
     */   
     function fund
-                            (   
+                            (
+                                address msg_sender,
+                                uint msg_value
                             )
                             public
                             requireIsOperational
                             payable
     {
-        require(airlines[msg.sender].isRegistered, "Airline is not registered.");
-        airlines[msg.sender].isPaid = Airline_funding_check();
-        airlines[msg.sender].isPaid = true;
-        airlines[msg.sender].isContracted = Airline_iscontracted_check(msg.sender);
+        require(airlines[msg_sender].isRegistered, "Airline is not registered.");
+        airlines[msg_sender].isPaid = Airline_funding_check(msg_value);
+        //airlines[msg_sender].isPaid = true;
+        airlines[msg_sender].isContracted = Airline_iscontracted_check(msg_sender);
     }
 
     function getFlightKey
@@ -331,7 +338,7 @@ contract FlightSuretyData {
                             external 
                             payable 
     {
-        fund();
+        //fund();
     }
 
 
