@@ -27,11 +27,25 @@ contract FlightSuretyApp {
     address private contractOwner;          // Account used to deploy contract
     FlightSuretyData flightSuretyData;
 
+
+    struct Passenger {
+        bool isInsured;
+        uint InsuredAmount;
+        uint CreditAmount;
+
+    }
+   
+
+
+
+
     struct Flight {
         bool isRegistered;
         uint8 statusCode;
         uint256 updatedTimestamp;
         address airline;
+        mapping(address => Passenger) passengers;
+        address [] passenger_address;
     }
     mapping(bytes32 => Flight) private flights;
 
@@ -180,13 +194,17 @@ contract FlightSuretyApp {
         flights[flight_key].statusCode = statusCode;
         //should be current timestamp
         //flights[flight_key].updatedTimestamp = timestamp;
+
+        if (statusCode == STATUS_CODE_LATE_AIRLINE || statusCode == STATUS_CODE_LATE_TECHNICAL)
+        {
+            for (i = 0; i < flights.passenger_address.length; i++)
+            {
+                creditInsurees(airline, flight, timestamp, flights.passenger_address[i]);
+            }
+        }
+        
     }
 
-    function stringToBytes32(string memory source) returns (bytes32 result) {
-        assembly {
-            result := mload(add(source, 32))
-        }
-    }
 
     // Generate a request for oracles to fetch flight information
     function fetchFlightStatus
@@ -380,6 +398,101 @@ contract FlightSuretyApp {
 
         return random;
     }
+
+
+   /**
+    * @dev Buy insurance for a flight
+    *
+    */   
+    function buy
+                            (
+                                address airline,
+                                string flight,
+                                uint256 timestamp
+                            )
+                            external
+                            requireIsOperational
+                            payable
+    {
+        bytes32 flight_key = getFlightKey(airline, flight, timestamp);
+        require(flights[flight_key].isRegistered, "No Registered flight found!");
+        
+
+        if (msg.value > 1 ether)
+        {
+            msg.sender.transfer(msg.value - 1);
+            flights[flight_key].passengers[msg.sender].InsuredAmount = 1 ether;
+        }
+        else if (msg.value > 0 ether)
+        {
+
+            flights[flight_key].passengers[msg.sender].InsuredAmount = msg.value;
+            
+        }
+
+        if (msg.value > 0 ether)
+        {
+            flights[flight_key].passengers[msg.sender].isInsured = true;
+            flights[flight_key].passengers[msg.sender].CreditAmount = 0;
+            flights[flight_key].passenger_address.push(msg.sender);
+        }
+    }
+
+    /**
+     *  @dev Credits payouts to insurees
+    */
+    function creditInsurees
+                                (
+                                    address airline,
+                                    string flight,
+                                    uint256 timestamp,
+                                    address insured
+                                )
+                                external
+                                
+                                pure
+    {
+        bytes32 flight_key = getFlightKey(airline, flight, timestamp);
+        uint premium = flights[flight_key].passengers[insured].InsuredAmount;
+        flights[flight_key].passengers[insured].InsuredAmount = 0;
+        flights[flight_key].passengers[insured].CreditAmount += premium * 1.5;
+    }
+    
+
+    /**
+     *  @dev Transfers eligible payout funds to insuree
+     *
+    */
+    function pay
+                            (
+                                address airline,
+                                string flight,
+                                uint256 timestamp,
+                                uint withdraw_amount
+                            )
+                            external
+                            
+                            pure
+    {
+        uint transfer_amount;
+        if (withdraw_amount >= flights[flight_key].passengers[msg.sender].CreditAmount)
+        {
+            transfer_amount = flights[flight_key].passengers[msg.sender].CreditAmount;
+            flights[flight_key].passengers[msg.sender].CreditAmount = 0;
+            msg.sender.transfer(transfer_amount);
+        }
+        else if (withdraw_amount > 0)
+        {
+            transfer_amount = withdraw_amount;
+            flights[flight_key].passengers[msg.sender].CreditAmount -= withdraw_amount;
+            msg.sender.transfer(transfer_amount);
+        }
+        
+    }
+
+
+
+
 
     function registerAirline(address airline) external {
         flightSuretyData.registerAirline(airline, msg.sender, msg.value);

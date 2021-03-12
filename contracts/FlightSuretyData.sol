@@ -178,7 +178,7 @@ contract FlightSuretyData {
         require(airlines[airline_address].isAgreed == false , "Voted Airlined has been agreed to be registrated.");
         require(airlines[msg_sender].isRegistered == true , "Voter needs to be a registered Airline.");
         airlines[airline_address].votes++;
-        if (airlines[airline_address].votes >= volume_registered_airlines / 2)
+        if ((airlines[airline_address].votes * 2) >= volume_registered_airlines)
         {
             airlines[airline_address].isAgreed = true;
             airlines[airline_address].isRegistered = true;
@@ -260,45 +260,6 @@ contract FlightSuretyData {
     }
 
 
-   /**
-    * @dev Buy insurance for a flight
-    *
-    */   
-    function buy
-                            (                             
-                            )
-                            external
-                            requireIsOperational
-                            payable
-    {
-
-    }
-
-    /**
-     *  @dev Credits payouts to insurees
-    */
-    function creditInsurees
-                                (
-                                )
-                                external
-                                
-                                pure
-    {
-    }
-    
-
-    /**
-     *  @dev Transfers eligible payout funds to insuree
-     *
-    */
-    function pay
-                            (
-                            )
-                            external
-                            
-                            pure
-    {
-    }
 
    /**
     * @dev Initial funding for the insurance. Unless there are too many delayed flights
