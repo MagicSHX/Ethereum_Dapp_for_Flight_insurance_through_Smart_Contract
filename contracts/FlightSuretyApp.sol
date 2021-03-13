@@ -11,7 +11,8 @@ import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 /************************************************** */
 contract FlightSuretyApp {
     using SafeMath for uint256; // Allow SafeMath functions to be called for all uint256 types (similar to "prototype" in Javascript)
-
+    //address[] passenger_address = new address[](500);
+    address[] passenger_address;
     /********************************************************************************************/
     /*                                       DATA VARIABLES                                     */
     /********************************************************************************************/
@@ -45,7 +46,7 @@ contract FlightSuretyApp {
         uint256 updatedTimestamp;
         address airline;
         mapping(address => Passenger) passengers;
-        address [] passenger_address;
+        address[] passenger_address;
     }
     mapping(bytes32 => Flight) private flights;
 
@@ -133,13 +134,15 @@ contract FlightSuretyApp {
     {
         //pend: check name duplication
         bytes32 flight_key = getFlightKey(airline, flight, timestamp);
+        //address[] passenger_address = new address[](500);
         flights[flight_key] = Flight({
             isRegistered: true,
             statusCode: STATUS_CODE_UNKNOWN,
             //STATUS_CODE_UNKNOWN
             //pending: needs current timestamp instead
             updatedTimestamp: timestamp,
-            airline: airline
+            airline: airline,
+            passenger_address: passenger_address
         });
     }
     
@@ -179,7 +182,7 @@ contract FlightSuretyApp {
     function processFlightStatus
                                 (
                                     address airline,
-                                    string memory flight,
+                                    string flight,
                                     uint256 timestamp,
                                     uint8 statusCode
                                 )
@@ -197,9 +200,9 @@ contract FlightSuretyApp {
 
         if (statusCode == STATUS_CODE_LATE_AIRLINE || statusCode == STATUS_CODE_LATE_TECHNICAL)
         {
-            for (i = 0; i < flights.passenger_address.length; i++)
+            for (uint i = 0; i < flights[flight_key].passenger_address.length; i++)
             {
-                creditInsurees(airline, flight, timestamp, flights.passenger_address[i]);
+                creditInsurees(airline, flight, timestamp, flights[flight_key].passenger_address[i]);
             }
         }
         
@@ -411,8 +414,9 @@ contract FlightSuretyApp {
                                 uint256 timestamp
                             )
                             external
-                            requireIsOperational
                             payable
+                            requireIsOperational
+                            
     {
         bytes32 flight_key = getFlightKey(airline, flight, timestamp);
         require(flights[flight_key].isRegistered, "No Registered flight found!");
@@ -448,14 +452,14 @@ contract FlightSuretyApp {
                                     uint256 timestamp,
                                     address insured
                                 )
-                                external
+                                //external
                                 
-                                pure
+                                
     {
         bytes32 flight_key = getFlightKey(airline, flight, timestamp);
         uint premium = flights[flight_key].passengers[insured].InsuredAmount;
         flights[flight_key].passengers[insured].InsuredAmount = 0;
-        flights[flight_key].passengers[insured].CreditAmount += premium * 1.5;
+        flights[flight_key].passengers[insured].CreditAmount += premium.mul(3).div(2);
     }
     
 
@@ -471,10 +475,11 @@ contract FlightSuretyApp {
                                 uint withdraw_amount
                             )
                             external
+                            payable
                             
-                            pure
     {
         uint transfer_amount;
+        bytes32 flight_key = getFlightKey(airline, flight, timestamp);
         if (withdraw_amount >= flights[flight_key].passengers[msg.sender].CreditAmount)
         {
             transfer_amount = flights[flight_key].passengers[msg.sender].CreditAmount;
@@ -490,6 +495,34 @@ contract FlightSuretyApp {
         
     }
 
+
+    function check_passenger_Premium
+                            (
+                                address airline,
+                                string flight,
+                                uint256 timestamp
+                            )
+                            external
+                            returns (uint)
+                            
+    {
+        bytes32 flight_key = getFlightKey(airline, flight, timestamp);
+        return flights[flight_key].passengers[msg.sender].InsuredAmount;
+    }
+
+    function check_passenger_Credit
+                            (
+                                address airline,
+                                string flight,
+                                uint256 timestamp
+                            )
+                            external
+                            returns (uint)
+                            
+    {
+        bytes32 flight_key = getFlightKey(airline, flight, timestamp);
+        return flights[flight_key].passengers[msg.sender].CreditAmount;
+    }
 
 
 

@@ -181,9 +181,18 @@ contract('Flight Surety Tests', async (accounts) => {
     let first_Flight_timestamp = 12345678;
     //Math.floor(Date.now() / 1000)
     let first_Airline_address = config.firstAirline;
+    let passenger_1 = accounts[31];
+    let passenger_2 = accounts[32];
+    let passenger_3 = accounts[33];
+    let Premium = web3.utils.toWei("1", "ether");
     // ACT
     try {
-
+        await config.flightSuretyApp.buy(
+            first_Airline_address,
+            first_Flight_name, 
+            first_Flight_timestamp,
+            {from: passenger_1, value: Premium}
+        );
         
     }
     catch(e) {
@@ -195,10 +204,122 @@ contract('Flight Surety Tests', async (accounts) => {
     //assert.equal(result, true, "Register flight function is not working");
 
 
-
+    let Premium_checked = await config.flightSuretyApp.check_passenger_Premium.call(
+        first_Airline_address,
+        first_Flight_name, 
+        first_Flight_timestamp,
+        {from: passenger_1}
+    );
+    console.log(Premium_checked);
+    
+    assert.equal(Premium_checked, Premium, "Buy flight insurance function is not working");
 
 
   });
+
+
+
+
+
+  it('Pay Credit function', async () => {
+    
+    // ARRANGE
+    let first_Flight_name = "SGFL001";
+    let first_Flight_timestamp = 12345678;
+    //Math.floor(Date.now() / 1000)
+    let first_Airline_address = config.firstAirline;
+    let passenger_1 = accounts[31];
+    let passenger_2 = accounts[32];
+    let passenger_3 = accounts[33];
+    let Premium = web3.utils.toWei("1", "ether");
+    // ACT
+    try {
+        await config.flightSuretyApp.creditInsurees(
+            first_Airline_address,
+            first_Flight_name, 
+            first_Flight_timestamp,
+            passenger_1
+        );
+        
+    }
+    catch(e) {
+        console.log(e);
+    }
+    //let result = await config.flightSuretyApp.FlightIsRegistered.call(first_Airline_address, first_Flight_name, first_Flight_timestamp); 
+    //console.log("account 1 is Airline? : ", await config.flightSuretyData.isAirline.call(accounts[1]));
+    // ASSERT
+    //assert.equal(result, true, "Register flight function is not working");
+
+
+    let Premium_checked = await config.flightSuretyApp.check_passenger_Premium.call(
+        first_Airline_address,
+        first_Flight_name, 
+        first_Flight_timestamp,
+        {from: passenger_1}
+    );
+    console.log(Premium_checked);
+    assert.equal(Premium_checked, 0, "Buy flight insurance function is not working");
+
+
+    let Credit_checked = await config.flightSuretyApp.check_passenger_Credit.call(
+        first_Airline_address,
+        first_Flight_name, 
+        first_Flight_timestamp,
+        {from: passenger_1}
+    );
+    console.log(Credit_checked);
+    assert.equal(Credit_checked, Premium * 1.5, "Buy flight insurance function is not working");
+
+
+  });
+
+
+  it('Claim Payout function', async () => {
+    
+    // ARRANGE
+    let first_Flight_name = "SGFL001";
+    let first_Flight_timestamp = 12345678;
+    //Math.floor(Date.now() / 1000)
+    let first_Airline_address = config.firstAirline;
+    let passenger_1 = accounts[31];
+    let passenger_2 = accounts[32];
+    let passenger_3 = accounts[33];
+    let Credit = web3.utils.toWei("1.5", "ether");
+    let Claim_payout = web3.utils.toWei("1", "ether");
+    // ACT
+    try {
+        await config.flightSuretyApp.pay(
+            first_Airline_address,
+            first_Flight_name, 
+            first_Flight_timestamp,
+            Claim_payout,
+            {from: passenger_1}
+        );
+        
+    }
+    catch(e) {
+        console.log(e);
+    }
+    //let result = await config.flightSuretyApp.FlightIsRegistered.call(first_Airline_address, first_Flight_name, first_Flight_timestamp); 
+    //console.log("account 1 is Airline? : ", await config.flightSuretyData.isAirline.call(accounts[1]));
+    // ASSERT
+    //assert.equal(result, true, "Register flight function is not working");
+
+
+    let Credit_checked = await config.flightSuretyApp.check_passenger_Credit.call(
+        first_Airline_address,
+        first_Flight_name, 
+        first_Flight_timestamp,
+        {from: passenger_1}
+    );
+    console.log(Credit_checked);
+    assert.equal(Credit_checked, Credit - Claim_payout, "Buy flight insurance function is not working");
+
+
+  });
+
+
+
 
 
 

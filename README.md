@@ -31,7 +31,7 @@ To view dapp:
 `http://localhost:8000`
 
 ## Develop Server
-
+`npm i -D babel-core babel-polyfill babel-preset-es2015 babel-preset-stage-0 babel-loader`
 `npm run server`
 `truffle test ./test/oracles.js`
 
