@@ -23,7 +23,7 @@ contract('Oracles', async (accounts) => {
 
   });
 
-
+/*
   it('can register oracles', async () => {
     
     // ARRANGE
@@ -38,25 +38,25 @@ contract('Oracles', async (accounts) => {
       console.log(`Oracle Registered: ${result[0]}, ${result[1]}, ${result[2]}`);
     }
   });
-
+*/
   it('can request flight status', async () => {
     
     // ARRANGE
     let flight = 'ND1309'; // Course number
     let timestamp = Math.floor(Date.now() / 1000);
     let first_Airline_address = accounts[1];
-    let random_number = Math.floor(Math.random() * 6);
+    //let random_number = Math.floor(Math.random() * 6);
 
-    console.log(STATUS_CODE_LIST[random_number]);
+    //console.log(STATUS_CODE_LIST[random_number]);
 
     await config.flightSuretyApp.registerFlight(
       flight, 
       timestamp,
       first_Airline_address,
-      {from: config.firstAirline}
+      {from: first_Airline_address}
     );
     // Submit a request for oracles to get status information for a flight
-    await config.flightSuretyApp.fetchFlightStatus(config.firstAirline, flight, timestamp);
+    await config.flightSuretyApp.fetchFlightStatus(first_Airline_address, flight, timestamp);
 
     // ACT
 
@@ -64,6 +64,7 @@ contract('Oracles', async (accounts) => {
     // loop through all the accounts and for each account, all its Indexes (indices?)
     // and submit a response. The contract will reject a submission if it was
     // not requested so while sub-optimal, it's a good test of that feature
+    /*
     for(let a = 1; a < TEST_ORACLES_COUNT; a++) {
 
       // Get oracle information
@@ -87,7 +88,8 @@ contract('Oracles', async (accounts) => {
 
       }
     }
-    let Flight_Status_Code = await config.flightSuretyApp.FlightStatusCode.call(config.firstAirline, flight, timestamp);
+    */
+    let Flight_Status_Code = await config.flightSuretyApp.FlightStatusCode.call(first_Airline_address, flight, timestamp);
     console.log("Flight Status Code: ", Flight_Status_Code);
 
   });

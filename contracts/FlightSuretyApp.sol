@@ -217,6 +217,7 @@ contract FlightSuretyApp {
                             uint256 timestamp                            
                         )
                         external
+                        //returns(uint8, bytes32, bool)
     {
         uint8 index = getRandomIndex(msg.sender);
 
@@ -228,6 +229,8 @@ contract FlightSuretyApp {
                                             });
 
         emit OracleRequest(index, airline, flight, timestamp);
+        //return (index, key, oracleResponses[key].isOpen);
+        
     } 
 
 
@@ -323,12 +326,14 @@ contract FlightSuretyApp {
                             uint8 statusCode
                         )
                         external
+                        //returns (bytes32, bool)
     {
         require((oracles[msg.sender].indexes[0] == index) || (oracles[msg.sender].indexes[1] == index) || (oracles[msg.sender].indexes[2] == index), "Index does not match oracle request");
 
 
         bytes32 key = keccak256(abi.encodePacked(index, airline, flight, timestamp));
-        require(oracleResponses[key].isOpen, "Flight or timestamp do not match oracle request");
+        //return (key, oracleResponses[key].isOpen);
+        require(oracleResponses[key].isOpen, "oracleResponses key is not found or Open~");
 
         oracleResponses[key].responses[statusCode].push(msg.sender);
 

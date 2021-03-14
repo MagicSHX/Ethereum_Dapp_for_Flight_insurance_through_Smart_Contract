@@ -23,49 +23,62 @@
 
 
     <main class="container">
+        <div class="row">
+            <div class="column">
 
-        <div class="Passenger section">
-            <label for="passenger-flight">Choose a flight:</label>
-            <br>
-            <select name="passenger-flight" id="passenger-flight">
-                <option value="SGFL001">Volvo</option>
-                <option value="ND1309">Saab</option>
-            </select>
-            <br><br>
+                <div class="Passenger section">
+                    <label for="passenger-flight-departure">Choose a flight with departure:</label>
+                    <br>
+                    <select name="passenger-flight-departure" id="passenger-flight-departure">
+                        <option value="SG001">SG001-12345678</option>
+                        <option value="SG002">SG002-12345678</option>
+                    </select>
+                    <br><br>
+        
+                    <label for="passenger-customer">Select Passenger's Customer address:</label>
+                    <br>
+                    <select name="ppassenger-customer" id="passenger-customer">
+                        <option value="0xed11AC36754F6e5ff86B1D01172F2a98606703cb">0xed11AC36754F6e5ff86B1D01172F2a98606703cb</option>
+                        <option value="0x0cc0034bbdE93E3Ea8d10358d86DF805e671b889">0x0cc0034bbdE93E3Ea8d10358d86DF805e671b889</option>
+                        <option value="0xbA6fFE4086149b5F461954c8ffBFE0a412CB4a42">0xbA6fFE4086149b5F461954c8ffBFE0a412CB4a42</option>
+                        <option value="0x08436f742b7637b777Ce0465e494b64225ce3053">0x08436f742b7637b777Ce0465e494b64225ce3053</option>
+                        <option value="0x20ca42352862789eC2364D07124F7865c0E0F4df">0x20ca42352862789eC2364D07124F7865c0E0F4df</option>
+                    </select>
+                    <br><br>
+        
+                    <label class="form">Premium willing to pay: </label>
+                    <br>
+                    <input type="number" id="passenger-flight-premium" min="0.00" max = "1.00" value="1.00" step="0.01">
+                    <br><br>
+        
+        
+        
+                    <btn class="btn btn-primary" id="submit-premium">Buy Insurance</btn>
+                    <br><br>
+        
+                    <label class="form">Claim Payout credit willing to withdraw: </label>
+                    <br>
+                    <input type="number" id="passenger-flight-claim-payout" min="0.00" max = "1.50" value="0.50" step="0.01">
+                    <br><br>
+        
+                    <btn class="btn btn-primary" id="submit-Claim-withdraw-request">Withdraw</btn>
+                    <br><br>
+                </div>
+            </div>
 
-            <label for="passenger-flight-departure">Choose a departure:</label>
-            <br>
-            <select name="passenger-flight-departure" id="passenger-flight-departure">
-                <option value="SGFL001">Volvo</option>
-                <option value="ND1309">Saab</option>
-            </select>
-            <br><br>
-            <label class="form">Passenger</label>
-            <br><br>
-            <input type="text" id="passenger-flight">
-            <br><br>
-            <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
-            <br><br>
+            <div class="column">
+
+                <label class="form">Flight</label>
+                <select name="flight-number" id="flight-number">
+                    <option value="SG001">SG001-12345678</option>
+                    <option value="SG002">SG002-12345678</option>
+                </select>
+                <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
+                <div id="display-wrapper" class="top-20">
+            </div>
+
         </div>
 
-
-
-
-
-        <div id="display-wrapper" class="top-20">
-        </div>
-
-
-
-
-
-
-
-
-
-        <div class="row top-20">
-            <label class="form">Flight</label> <input type="text" id="flight-number"> <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
-        </div>
     </main>
 
 </body>

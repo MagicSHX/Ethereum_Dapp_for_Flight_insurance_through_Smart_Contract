@@ -10,7 +10,6 @@ To install, download or clone the repo, then:
 
 `npm install`
 `ganache-cli -l 9999999999999 -g 1 -a 50 -e 10000`
-`truffle develop` - not utilized here as using ganache for the project
 `truffle migrate --reset`
 `truffle compile`
 
@@ -19,7 +18,7 @@ To install, download or clone the repo, then:
 To run truffle tests:
 
 `truffle test ./test/flightSurety.js`
-`truffle test ./test/oracles.js`
+`truffle test ./test/oracles_no_server.js`
 
 To use the dapp:
 
@@ -33,14 +32,7 @@ To view dapp:
 ## Develop Server
 `npm i -D babel-core babel-polyfill babel-preset-es2015 babel-preset-stage-0 babel-loader`
 `npm run server`
-`truffle test ./test/oracles.js`
-
-## Deploy
-
-To build dapp for prod:
-`npm run dapp:prod`
-
-Deploy the contents of the ./dapp folder
+`truffle test ./test/oracles_with_server.js`
 
 
 ## Resources

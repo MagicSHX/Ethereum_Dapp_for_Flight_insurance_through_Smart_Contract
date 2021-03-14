@@ -26,6 +26,43 @@ import './flightsurety.css';
             });
         })
     
+
+
+
+
+        // User-submitted transaction
+        DOM.elid('submit-premium').addEventListener('click', () => {
+            let flight = DOM.elid('passenger-flight-departure').value;
+            let flight_timestamp = 12345678;
+            let customer_address = DOM.elid('passenger-customer').value;
+            let premium = DOM.elid('passenger-flight-premium').value;
+            // Write transaction
+            contract.buy(flight, flight_timestamp, customer_address, premium, (error, result) => {
+                console.log(result);
+                console.log(error);
+                //display('Oracles', 'Trigger oracles', [ { label: 'Fetch Flight Status', error: error, value: result.flight + ' ' + result.timestamp} ]);
+            });
+        })
+
+
+
+
+        // User-submitted transaction
+        DOM.elid('submit-Claim-withdraw-request').addEventListener('click', () => {
+            let flight = DOM.elid('passenger-flight-departure').value;
+            let flight_timestamp = 12345678;
+            let customer_address = DOM.elid('passenger-customer').value;
+            let claim_payout = DOM.elid('passenger-flight-claim-payout').value;
+            
+            // Write transaction
+            contract.pay(flight, flight_timestamp, customer_address, claim_payout, (error, result) => {
+                console.log(result);
+                console.log(error);
+                //display('Oracles', 'Trigger oracles', [ { label: 'Fetch Flight Status', error: error, value: result.flight + ' ' + result.timestamp} ]);
+            });
+        })
+
+
     });
     
 
